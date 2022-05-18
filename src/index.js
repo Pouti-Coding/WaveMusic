@@ -1,5 +1,14 @@
 const MusicBot = require("./structures/MusicClient");
 const client = new MusicBot();
+
+const express = require("express")
+const web = express()
+
+web.listen(3000, () => {})
+web.get("/", (req, res) => {
+  res.send("Đang hoạt động!")
+})
+
 module.exports = client; 
 client._loadPlayer()
 client._loadClientEvents()
