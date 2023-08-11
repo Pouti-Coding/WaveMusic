@@ -4,7 +4,7 @@ const db = require("../../schema/autoReconnect");
 module.exports = {
     name: '247',
     category: 'Music',
-    description: 'To force skip the current playing song.',
+    description: 'Joins the voice channel for 24/7.',
     args: false,
     usage: '',
     userPrams: [],
@@ -27,9 +27,9 @@ module.exports = {
             message.reply({ embeds: [thing] })
         } else {
             data = new db({
-                Guild: player.guild,
-                TextId: player.text,
-                VoiceId: player.voice
+                Guild: player.guildId,
+                TextId: player.textId,
+                VoiceId: player.voiceId
             })
             await data.save();
             let thing = new MessageEmbed()

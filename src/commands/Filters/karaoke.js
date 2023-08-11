@@ -16,7 +16,7 @@ module.exports = {
   sameVoiceChannel: true,
   execute: async (message, args, client, prefix) => {
     const player = client.manager.players.get(message.guild.id);
-    if (!player.current) {
+    if (!player.queue.current) {
       let thing = new MessageEmbed().setColor('RED').setDescription('There is no music playing.');
       return message.reply({ embeds: [thing] });
     }
@@ -75,7 +75,7 @@ module.exports = {
     collector.on("collect", async (b) => {
       if (!b.replied) await b.deferUpdate({ ephemeral: true });
       if (b.customId === "clear_but") {
-        await player.player.clearFilters();
+        await player.shoukaku.clearFilters();
         return await b.editReply({
           embeds: [
             embed1.setDescription(`${emojiequalizer} Karaoke Mode Is \`OFF\``),
@@ -83,11 +83,16 @@ module.exports = {
           components: [row2],
         });
       } else if (b.customId === "Karaoke_but") {
-        await player.player.setFilters({
-          op: 'filters',
-          guildId: message.guild.id,
-          rotation: { rotationHz: 0.2 },
-        });
+        await player.shoukaku.setFilters({
+        op: 'filters',
+        guildId: message.guild.id,
+        karaoke: {
+          level: 1.0,
+          monoLevel: 1.0,
+          filterBand: 220.0,
+          filterWidth: 100.0,
+        },
+      });
         return await b.editReply({
           embeds: [
             embed1.setDescription(`${emojiequalizer} Karaoke Mode Is \`ON\``),

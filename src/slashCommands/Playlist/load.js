@@ -58,32 +58,32 @@ module.exports = {
       embeds: [
         new MessageEmbed()
           .setColor(client.embedColor)
-          .setDescription(`Adding ${length} track(s) from your playlist **${Name}** to the queue.`),
+          .setDescription(`Adding ${data.Playlist.length} track(s) from your playlist **${Name}** to the queue.`),
       ],
     });
     for (const track of data.Playlist) {
       let s = await player.search(track.uri ? track.uri : track.title, interaction.user);
       if (s.type === 'PLAYLIST') {
-        await player.addSong(s.tracks[0]);
-        if (!player.current) player.play();
+        await player.queue.add(s.tracks[0]);
+        if (!player.queue.current) player.play();
         ++count;
       } else if (s.type === 'TRACK') {
-        await player.addSong(s.tracks[0]);
-        if (!player.current) player.play();
+        await player.queue.add(s.tracks[0]);
+        if (!player.queue.current) player.play();
         ++count;
       } else if (s.type === 'SEARCH') {
-        await player.addSong(s.tracks[0]);
-        if (!player.current) player.play();
+        await player.queue.add(s.tracks[0]);
+        if (!player.queue.current) player.play();
         ++count;
       }
     }
-    if (player && !player.current) player.destroy(interaction.guild.id);
+    if (player && !player.queue.current) player.destroy(interaction.guild.id);
     if (count <= 0 && m)
       return await m.editReply({
         embeds: [
           new MessageEmbed()
             .setColor(client.embedColor)
-            .setDescription(`Couldn't add any tracks from your playlist **${name}** to the queue.`),
+            .setDescription(`Couldn't add any tracks from your playlist **${Name}** to the queue.`),
         ],
       });
     if (m)
@@ -91,7 +91,7 @@ module.exports = {
         embeds: [
           new MessageEmbed()
             .setColor(client.embedColor)
-            .setDescription(`Added ${count} track(s) from your playlist **${name}** to the queue.`),
+            .setDescription(`Added ${count} track(s) from your playlist **${Name}** to the queue.`),
         ],
       });
   },
